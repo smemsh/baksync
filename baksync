@@ -54,6 +54,11 @@ setenv snapmnt		/var/tmp/snapmnt
 setenv rcfile		~/.baksyncrc
 setenv snapsz		1G
 
+# has to be defaulted inline or it will always have to be supplied
+# because overrides happen later and expansion happens here
+#
+#setenv destdir          $srcvg
+
 # lvnames to back up in $srcvg volume group
 # (if any argv given, they replace these defaults)
 #
@@ -200,7 +205,7 @@ main ()
 		# TODO: if slash, use findmnt to look up the volume
 		vol=${vol%/}
 		vol=${vol#/}
-		destpath=$bakroot/$srcvg/$vol
+		destpath=$bakroot/${destdir:-$srcvg}/$vol
 
 		args=("${rsyncargs[@]}")
 		for x in ${excludes[$vol]}; do
