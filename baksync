@@ -77,7 +77,6 @@ setarr rsyncargs \
 	--delete-after \
 	--partial \
 	--inplace \
-	--sparse \
 	--numeric-ids \
 ;
 
