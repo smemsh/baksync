@@ -61,6 +61,7 @@ setarr bakvols \
 	root \
 	home \
 	local \
+	usr \
 	var \
 ;
 
