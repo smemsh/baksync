@@ -27,11 +27,6 @@
 #   - override any other configuration variables therein as well
 #   - no plans to handle spaces in backup paths, exclude paths, mount points
 #
-# stat:
-#   - used in production by author
-#   - some site-local customizations may remain, but has rcfile
-#   - no known users, please notify author if used
-#
 # scott@smemsh.net
 # http://smemsh.net/src/baksync/
 # http://spdx.org/licenses/GPL-2.0.html
