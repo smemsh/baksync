@@ -33,9 +33,12 @@
 #
 ##############################################################################
 
-source ~/lib/sh/include
-include setenv
-include error
+invname=${0##*/}
+setenv () { local v=$1; shift; IFS= eval $v="\$*"; }
+addarr () { local v=$1; shift; eval $v+=\(\"\$@\"\); }
+setarr () { local v=$1; shift; eval $v=\(\"\$@\"\); }
+warn   () { echo "$invname: ${FUNCNAME[1]}: $*" >&2; }
+bomb   () { warn "$@"; false; exit; }
 
 # set defaults before rcfile overrides
 #
