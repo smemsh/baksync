@@ -13,12 +13,6 @@
 #   - local filesystems to backup are backed by lvm (for snapshots)
 #
 # todo:
-#   - https://lincolnloop.com/blog/detecting-file-moves-renames-rsync/ see
-#     comments, maybe make a /.sums/ dir for all backed up filesystems with
-#     flat hard link named with md5-based names, this can also be used to
-#     detect dupes (think photos), use cron job to remove files therein with
-#     link count = 1 (meaning only our hard link is left)
-#     UPDATE: script written (mkhashlinks), currently in testing
 #   - allow specification of multiple vgs too, not just lvs
 #
 # note:
