@@ -11,7 +11,6 @@
 #   - rsync present on local and remote
 #   - ssh daemon on remote, allowing root access
 #   - local filesystems to backup are backed by lvm (for snapshots)
-#   - http://smemsh.net/src/libsh/ (see include and require)
 #
 # todo:
 #   - https://lincolnloop.com/blog/detecting-file-moves-renames-rsync/ see
