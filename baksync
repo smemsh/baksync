@@ -21,7 +21,7 @@
 #   - no plans to handle spaces in backup paths, exclude paths, mount points
 #
 # scott@smemsh.net
-# http://smemsh.net/src/baksync/
+# https://github.com/smemsh/baksync/
 # http://spdx.org/licenses/GPL-2.0.html
 #
 ##############################################################################
