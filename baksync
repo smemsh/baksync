@@ -74,6 +74,7 @@ setarr rsyncargs \
 	--sparse \
 	--inplace \
 	--numeric-ids \
+	--fuzzy \
 ;
 
 # if we don't announce this ahead of time, first assignment
