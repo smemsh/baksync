@@ -74,8 +74,9 @@ setarr rsyncargs \
 	--sparse \
 	--inplace \
 	--numeric-ids \
-	--fuzzy \
 ;
+# this causes errors, see task cc0ab953
+#	--fuzzy \
 
 # if we don't announce this ahead of time, first assignment
 # makes it integer-indexed
