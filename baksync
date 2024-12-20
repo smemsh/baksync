@@ -74,6 +74,9 @@ setarr rsyncargs \
 	--sparse \
 	--inplace \
 	--numeric-ids \
+	--stats \
+	--info=progress2 \
+	--out-format="%10i %20'''b %n%L" \
 ;
 # this causes errors, see task cc0ab953
 #	--fuzzy \
