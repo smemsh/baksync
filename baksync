@@ -160,7 +160,11 @@ initvars ()
 	setenv snapvol      $vgdev/$snaplv
 	addarr rsyncargs    "--rsh=$sshcmd"
 	addarr snapargs     '--name' "$snaplv"
-	addarr snapargs     '--size' "$snapsz"
+
+	# thin volumes should not be snapshot with a size argument
+	#
+	lvs --noheadings -o thin_id $srcvg/$vol | grep -qP \\d
+	(($? != 0)) && addarr snapargs '--size' "$snapsz"
 }
 
 volume_start_print ()
@@ -211,6 +215,7 @@ main ()
 		$sshcmd $baksrv test -d $destpath ||
 			bomb "bakpath $destpath dne on $baksrv"
 		lvcreate --snapshot "${snapargs[@]}" $vgdev/$vol
+		lvchange -Kay $snapvol # only needed on thin
 		mount -o ro $snapvol $snapmnt
 		rsync "${args[@]}" $snapmnt/ $baksrv:$destpath/
 		umount $snapmnt
