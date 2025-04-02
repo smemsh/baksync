@@ -1,4 +1,5 @@
 #
 
 rc filter=git-crypt diff=git-crypt
+rc.* filter=git-crypt diff=git-crypt
 .gitattributes !filter !diff
