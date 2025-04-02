@@ -5,15 +5,13 @@
 #
 # args:
 #   - $1 can optionally be '-n' to give to rsync (test mode, do nothing)
-#   - rest of args are volume names to backup (use hardcoded list if none)
+#   - rest of args are vg:lv pairs from rcfile to backup (all if none)
+#   - rcfiles: ~/.baksyncrc.vgname for each vg that has volumes to backup
 #
 # deps:
 #   - rsync present on local and remote
 #   - ssh daemon on remote, allowing root access
 #   - local filesystems to backup are backed by lvm (for snapshots)
-#
-# todo:
-#   - allow specification of multiple vgs too, not just lvs
 #
 # note:
 #   - set rsync path excludes per-lv in $rcfile using add_excludes()
@@ -42,7 +40,6 @@ setenv srcvg		baksrv
 setenv snaplv		baksnap
 setenv bakroot		/srv/bak/rsyncs
 setenv snapmnt		/var/tmp/snapmnt
-setenv rcfile		~/.baksyncrc
 setenv snapsz		1G
 
 # has to be defaulted inline or it will always have to be supplied
@@ -90,7 +87,7 @@ declare -A excludes
 
 parse_args ()
 {
-	declare -g testflag
+	rsyncargs=("${rsyncargs_base[@]}")
 
 	if [[ $1 == '-n' ]]; then
 		rsyncargs+=($1); shift; fi;
@@ -191,14 +188,11 @@ volume_end_print () { :; }
 
 ##############################################################################
 
-main ()
+baksync ()
 {
 	local vol
 
-	cd /
 	initvars "$@"
-	set -ue
-
 	for vol in ${bakvols[@]}
 	do
 		# often a path is given
@@ -214,14 +208,43 @@ main ()
 		volume_start_print $vol
 		$sshcmd $baksrv test -d $destpath ||
 			bomb "bakpath $destpath dne on $baksrv"
+		#cat <<- %
 		lvcreate --snapshot "${snapargs[@]}" $vgdev/$vol
 		lvchange -Kay $snapvol # only needed on thin
 		mount -o ro $snapvol $snapmnt
 		rsync "${args[@]}" $snapmnt/ $baksrv:$destpath/
 		umount $snapmnt
 		lvremove --force $snapvol
+		#%
 
 		volume_end_print $vol
+	done
+}
+
+main ()
+{
+	local rcfile rc
+	local -a rcfiles rcargs
+	local -a rsyncargs_base=("${rsyncargs[@]}")
+
+	cd /
+	set -ue
+
+	if test -e ~/.baksyncrc
+	then rcfiles=(~/.baksyncrc)
+	else rcfiles=(~/.baksyncrc.*)
+	fi
+
+	for rcfile in ${rcfiles[@]}
+	do
+		rcargs=()
+		rc=${rcfile##*.}
+		for arg
+		do [[ $arg == $rc:* ]] \
+		&& rcargs+=(${arg##*:}) \
+		|| rcargs+=($arg)
+		done
+		baksync "${rcargs[@]}" || bomb "$rcfile: failed, aborting"
 	done
 }
 
