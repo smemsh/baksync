@@ -82,13 +82,12 @@ setarr rsyncargs \
 # makes it integer-indexed
 #
 declare -A excludes
+declare -a rsyncargs snapargs
 
 ##############################################################################
 
 parse_args ()
 {
-	rsyncargs=("${rsyncargs_base[@]}")
-
 	if [[ ${1:-} == '-n' ]]; then
 		rsyncargs+=($1); shift; fi;
 
@@ -132,6 +131,10 @@ add_excludes ()
 initvars ()
 {
 	local vol
+
+	rsyncargs=("${rsyncargs_base[@]}")
+	snapargs=()
+	excludes=()
 
 	# rcfile overrides hardcoded defaults at top
 	#
