@@ -89,10 +89,10 @@ parse_args ()
 {
 	rsyncargs=("${rsyncargs_base[@]}")
 
-	if [[ $1 == '-n' ]]; then
+	if [[ ${1:-} == '-n' ]]; then
 		rsyncargs+=($1); shift; fi;
 
-	if [[ $1 == -* ]]; then
+	if [[ ${1:-} == -* ]]; then
 		warn "only '-n' option available, aborting"
 		false
 		return
@@ -118,7 +118,7 @@ add_excludes ()
 {
 	local i
 	local key=${1:?}; shift
-	local val="${excludes[$key]}" # append if previous value
+	local val="${excludes[$key]:-}" # append if previous value
 
 	while (($#)); do
 		val+=$'\n'
