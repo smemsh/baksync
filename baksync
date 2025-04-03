@@ -209,7 +209,7 @@ baksync ()
 		$sshcmd $baksrv test -d $destpath ||
 			bomb "bakpath $destpath dne on $baksrv"
 		lvcreate --snapshot "${snapargs[@]}" $vgdev/$vol
-		lvchange -Kay $snapvol # only needed on thin
+		lvchange -yKay $snapvol # only needed on thin
 		mount -o ro $snapvol $snapmnt
 		rsync "${args[@]}" $snapmnt/ $baksrv:$destpath/
 		umount $snapmnt
